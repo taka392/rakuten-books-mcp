@@ -21,7 +21,7 @@ class RakutenBooksClient:
     Credentials are read from environment (typically MCP ``env`` block):
 
     - ``RAKUTEN_BOOKS_APPLICATION_ID`` — Application ID from the developer portal
-    - ``RAKUTEN_BOOKS_ACCESS_KEY`` — Access Key (sent as ``accessKey`` header)
+    - ``RAKUTEN_BOOKS_ACCESS_KEY`` — Access Key (sent as query param ``accessKey``)
     - ``RAKUTEN_BOOKS_AFFILIATE_ID`` — optional; adds ``affiliateId`` to requests
     """
 
@@ -50,8 +50,9 @@ class RakutenBooksClient:
         # openapi.rakuten.co.jp returns 403 REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING
         # unless browser-like Origin/Referer are sent. accessKey must be a query param.
         self._browser_headers = {
-            "Referer": "https://webservice.rakuten.co.jp/",
-            "Origin": "https://webservice.rakuten.co.jp/",
+            # Some Open API gateways reject webservice.rakuten.co.jp; www works in practice.
+            "Referer": "https://www.rakuten.co.jp/",
+            "Origin": "https://www.rakuten.co.jp/",
             "User-Agent": (
                 "rakuten-books-mcp/0.1.0 "
                 "(https://github.com/taka392/rakuten-books-mcp)"

@@ -20,7 +20,9 @@ Credentials are **not** read from `.env` at runtime. Pass them via your MCP clie
 | `RAKUTEN_BOOKS_ACCESS_KEY` | yes | Access Key (sent as query parameter `accessKey`, per current Open API behaviour) |
 | `RAKUTEN_BOOKS_AFFILIATE_ID` | no | Affiliate ID — when set, `affiliateId` is added and responses may include `affiliateUrl` |
 
-The client also sends `Origin` / `Referer` pointing at `https://webservice.rakuten.co.jp/` so calls to `openapi.rakuten.co.jp` do not fail with `REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING` (403).
+The client sends `Origin` / `Referer` as `https://www.rakuten.co.jp/` so calls to `openapi.rakuten.co.jp` do not fail with `REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING` (403).
+
+If Cursor still runs an old `uvx` cache, add `"--refresh"` before `"--from"` in `mcp.json` (already recommended in the example flow).
 
 ## Security
 
