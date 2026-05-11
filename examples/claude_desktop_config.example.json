@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "rakuten-books": {
+      "command": "/opt/homebrew/bin/uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/taka392/rakuten-books-mcp.git",
+        "rakuten-books-mcp"
+      ],
+      "env": {
+        "RAKUTEN_BOOKS_APPLICATION_ID": "<application id>",
+        "RAKUTEN_BOOKS_ACCESS_KEY": "<access key>",
+        "RAKUTEN_BOOKS_AFFILIATE_ID": "<affiliate id — optional>"
+      }
+    }
+  }
+}
