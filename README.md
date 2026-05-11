@@ -19,10 +19,11 @@ Credentials are **not** read from `.env` at runtime. Pass them via your MCP clie
 | `RAKUTEN_BOOKS_APPLICATION_ID` | yes | Application ID from the [developer portal](https://webservice.rakuten.co.jp/) |
 | `RAKUTEN_BOOKS_ACCESS_KEY` | yes | Access Key (sent as query parameter `accessKey`, per current Open API behaviour) |
 | `RAKUTEN_BOOKS_AFFILIATE_ID` | no | Affiliate ID — when set, `affiliateId` is added and responses may include `affiliateUrl` |
+| `RAKUTEN_BOOKS_REFERRER_URL` | strongly recommended | Must match the **Application URL** in the developer portal (used as `Referer` / `Origin`). If unset, defaults to `https://example.com` |
 
-The client sends `Origin` / `Referer` as `https://www.rakuten.co.jp/` so calls to `openapi.rakuten.co.jp` do not fail with `REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING` (403).
+Open API checks the HTTP referrer. If you see `HTTP_REFERRER_NOT_ALLOWED` or `REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING`, set `RAKUTEN_BOOKS_REFERRER_URL` to the same URL you registered for the app (including `http` vs `https`).
 
-If Cursor still runs an old `uvx` cache, add `"--refresh"` before `"--from"` in `mcp.json` (already recommended in the example flow).
+If Cursor caches an old Git install, keep `"--refresh"` in the `uvx` args (see examples).
 
 ## Security
 

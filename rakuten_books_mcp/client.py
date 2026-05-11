@@ -23,6 +23,11 @@ class RakutenBooksClient:
     - ``RAKUTEN_BOOKS_APPLICATION_ID`` — Application ID from the developer portal
     - ``RAKUTEN_BOOKS_ACCESS_KEY`` — Access Key (sent as query param ``accessKey``)
     - ``RAKUTEN_BOOKS_AFFILIATE_ID`` — optional; adds ``affiliateId`` to requests
+    - ``RAKUTEN_BOOKS_REFERRER_URL`` — **required for Open API**: the exact
+      **Application URL** registered in the Rakuten developer portal (used as
+      ``Referer`` and ``Origin``). If omitted, ``https://example.com`` is used
+      as a last resort (Rakuten returns ``HTTP_REFERRER_NOT_ALLOWED`` when the
+      referrer does not match your registered app URL).
     """
 
     def __init__(
@@ -30,6 +35,7 @@ class RakutenBooksClient:
         application_id: Optional[str] = None,
         access_key: Optional[str] = None,
         affiliate_id: Optional[str] = None,
+        referrer_url: Optional[str] = None,
     ) -> None:
         self.application_id = (
             application_id or os.getenv("RAKUTEN_BOOKS_APPLICATION_ID", "")
@@ -40,6 +46,13 @@ class RakutenBooksClient:
         self.affiliate_id = (
             affiliate_id or os.getenv("RAKUTEN_BOOKS_AFFILIATE_ID", "") or ""
         ).strip()
+        ref = (
+            referrer_url
+            or os.getenv("RAKUTEN_BOOKS_REFERRER_URL", "")
+            or "https://example.com"
+        ).strip()
+        if not ref.endswith("/"):
+            ref = ref + "/"
 
         if not self.application_id or not self.access_key:
             raise RakutenBooksError(
@@ -47,14 +60,13 @@ class RakutenBooksClient:
                 "Pass them via the MCP client's env block."
             )
 
-        # openapi.rakuten.co.jp returns 403 REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING
-        # unless browser-like Origin/Referer are sent. accessKey must be a query param.
+        # openapi.rakuten.co.jp validates Referer/Origin against the registered app URL.
+        # accessKey must be a query parameter (not only a header).
         self._browser_headers = {
-            # Some Open API gateways reject webservice.rakuten.co.jp; www works in practice.
-            "Referer": "https://www.rakuten.co.jp/",
-            "Origin": "https://www.rakuten.co.jp/",
+            "Referer": ref,
+            "Origin": ref.rstrip("/") or ref,
             "User-Agent": (
-                "rakuten-books-mcp/0.1.0 "
+                "rakuten-books-mcp/0.1.3 "
                 "(https://github.com/taka392/rakuten-books-mcp)"
             ),
         }

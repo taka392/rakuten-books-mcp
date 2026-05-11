@@ -10,7 +10,8 @@
       "env": {
         "RAKUTEN_BOOKS_APPLICATION_ID": "<application id>",
         "RAKUTEN_BOOKS_ACCESS_KEY": "<access key>",
-        "RAKUTEN_BOOKS_AFFILIATE_ID": "<affiliate id — optional>"
+        "RAKUTEN_BOOKS_AFFILIATE_ID": "<affiliate id — optional>",
+        "RAKUTEN_BOOKS_REFERRER_URL": "<same as Application URL in developer portal, e.g. https://example.com>"
       }
     }
   }
