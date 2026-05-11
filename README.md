@@ -17,8 +17,10 @@ Credentials are **not** read from `.env` at runtime. Pass them via your MCP clie
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `RAKUTEN_BOOKS_APPLICATION_ID` | yes | Application ID from the [developer portal](https://webservice.rakuten.co.jp/) |
-| `RAKUTEN_BOOKS_ACCESS_KEY` | yes | Access Key (sent as HTTP header `accessKey`) |
+| `RAKUTEN_BOOKS_ACCESS_KEY` | yes | Access Key (sent as query parameter `accessKey`, per current Open API behaviour) |
 | `RAKUTEN_BOOKS_AFFILIATE_ID` | no | Affiliate ID — when set, `affiliateId` is added and responses may include `affiliateUrl` |
+
+The client also sends `Origin` / `Referer` pointing at `https://webservice.rakuten.co.jp/` so calls to `openapi.rakuten.co.jp` do not fail with `REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING` (403).
 
 ## Security
 

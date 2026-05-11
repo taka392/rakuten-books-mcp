@@ -47,7 +47,16 @@ class RakutenBooksClient:
                 "Pass them via the MCP client's env block."
             )
 
-        self._headers = {"accessKey": self.access_key}
+        # openapi.rakuten.co.jp returns 403 REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING
+        # unless browser-like Origin/Referer are sent. accessKey must be a query param.
+        self._browser_headers = {
+            "Referer": "https://webservice.rakuten.co.jp/",
+            "Origin": "https://webservice.rakuten.co.jp/",
+            "User-Agent": (
+                "rakuten-books-mcp/0.1.0 "
+                "(https://github.com/taka392/rakuten-books-mcp)"
+            ),
+        }
 
     def _merge_optional_affiliate(self, params: Dict[str, Any]) -> Dict[str, Any]:
         if self.affiliate_id:
@@ -55,12 +64,13 @@ class RakutenBooksClient:
         return params
 
     def _get_json(self, url: str, params: Dict[str, Any]) -> Dict[str, Any]:
+        params = {**params, "accessKey": self.access_key}
         params = self._merge_optional_affiliate(params)
         try:
             resp = requests.get(
                 url,
                 params=params,
-                headers=self._headers,
+                headers=self._browser_headers,
                 timeout=30,
             )
         except requests.RequestException as exc:
